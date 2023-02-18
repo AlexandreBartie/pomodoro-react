@@ -35,7 +35,7 @@ export class PomodoroControl {
 
   public status = ePomodoroStatus.waiting
 
-  private time = 0
+  public time = 0
 
   constructor(pomodoro: Pomodoro) {
     this.pomodoro = pomodoro
@@ -50,6 +50,11 @@ export class PomodoroControl {
     this.status = ePomodoroStatus.resting
     this.time = time
   }
+
+  tick(): number {
+    this.time = this.time - 1
+    return this.time
+  }
 }
 
 export class Pomodoro {
@@ -60,15 +65,23 @@ export class Pomodoro {
   private cycles = 0
 
   get timeCountDown(): number {
-    return this.control.t
+    return this.control.time
   }
 
   get cyclesCount(): number {
     return this.cycles
   }
 
-  get status(): string {
+  get status(): ePomodoroStatus {
     return this.control.status
+  }
+
+  get isWaiting(): boolean {
+    return this.status === ePomodoroStatus.waiting
+  }
+
+  get isWorking(): boolean {
+    return this.status === ePomodoroStatus.working
   }
 
   constructor(settings: IPomodoroSettings) {
@@ -84,8 +97,8 @@ export class Pomodoro {
     this.control.startRest(this.timeToRest(long))
   }
 
-  tick(): void {
-    this.control.tick()
+  tick(): number {
+    return this.control.tick()
   }
 
   private timeToWork(): number {

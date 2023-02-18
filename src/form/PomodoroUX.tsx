@@ -1,24 +1,21 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useInterval } from '../hooks/useInterval'
 import { secondsToHHMMSS } from '../utils/secondsToShow'
 import { Button } from '../components/button'
 import { Timer } from '../components/timer'
 import { Pomodoro } from '../business/pomodoro'
 
-const bellStart = require('../sounds/bell-start.mp3')
-const bellFinish = require('../sounds/bell-finish.mp3')
+// const bellStart = require('../sounds/bell-start.mp3')
+// const bellFinish = require('../sounds/bell-finish.mp3')
 
-const audioStartWorking = new Audio(bellStart)
-const audioStopWorking = new Audio(bellFinish)
+// const audioStartWorking = new Audio(bellStart)
+// const audioStopWorking = new Audio(bellFinish)
 
 export type PomodoroUXPropTypes = { data: Pomodoro }
 
 export function PomodoroUX({ data }: PomodoroUXPropTypes): JSX.Element {
   const [time, setTime] = useState(data.timeCountDown)
-  const [status, setStatus] = useState(data.status)
-
+  // const [status, setStatus] = useState(data.status)
 
   // const [counting, setCounting] = useState(false)
   // const [working, setWorking] = useState(false)
@@ -40,10 +37,15 @@ export function PomodoroUX({ data }: PomodoroUXPropTypes): JSX.Element {
   useInterval(
     () => {
       setTime(data.tick())
-      if (working) setFullWorkingTime(fullWorkingTime + 1)
+      // if (data.isWorking) setFullWorkingTime(fullWorkingTime + 1)
     },
-    counting ? 1000 : null,
+    data.isWaiting ? null : 1000,
   )
+
+  useEffect(() => {
+    if (data.isWorking) document.body.classList.add('working')
+    if (data.isWaiting) document.body.classList.remove('working')
+  }, [data.status])
 
   // const configureWork = useCallback(() => {
   //   setCounting(true)
@@ -109,23 +111,22 @@ export function PomodoroUX({ data }: PomodoroUXPropTypes): JSX.Element {
 
   return (
     <div className="pomodoro">
-      <h2>Você está: {working ? 'Trabalhando' : 'Descansando'}</h2>
+      <h2>You are: {data.status}</h2>
       <Timer seconds={time} />
-
       <div className="controls">
         <Button text="Work" onClick={() => onStartWork()}></Button>
         <Button text="Rest" onClick={() => onStartRest(false)}></Button>
         <Button
-          className={!working && !resting ? 'hidden' : ''}
-          text={counting ? 'Pause' : 'Play'}
-          onClick={() => setCounting(!counting)}
+          className={data.isWorking ? 'hidden' : ''}
+          text={data.isWaiting ? 'Pause' : 'Play'}
+          // onClick={() => setCounting(!counting)}
         ></Button>
       </div>
 
       <div className="details">
-        <p>Ended Cycles: {completedCycles}</p>
-        <p>Ended Pomodoros: {numberOfPomodoros}</p>
-        <p>Worked Time: {secondsToHHMMSS(fullWorkingTime)}</p>
+        <p>Ended Cycles: {0}</p>
+        <p>Ended Pomodoros: {0}</p>
+        <p>Worked Time: {secondsToHHMMSS(0)}</p>
       </div>
     </div>
   )

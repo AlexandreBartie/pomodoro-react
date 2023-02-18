@@ -1,6 +1,6 @@
 import React from 'react'
 import { IPomodoroSettings, Pomodoro } from './business/pomodoro'
-import { PomodoroUX } from './form/PomodoroUX'
+import { PomodoroUX } from './form/pomodoroUX'
 
 function App(): JSX.Element {
   const settings: IPomodoroSettings = {

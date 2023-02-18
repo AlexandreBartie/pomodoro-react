@@ -21,6 +21,14 @@ body {
   background: #EF5D50;
 }
 
+.resting {
+  background: #3F2D50;
+}
+
+.waiting {
+  background: #0F5D50;
+}
+
 .hidden {
   display: none;
 }
