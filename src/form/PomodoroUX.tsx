@@ -1,14 +1,9 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-
 import React, { useEffect, useState } from 'react'
 import { useInterval } from '../hooks/useInterval'
 import { secondsToHHMMSS } from '../utils/secondsToShow'
 import { Button } from '../components/button'
 import { Timer } from '../components/timer'
 import { Pomodoro } from '../business/pomodoro'
-
-const bellStart = require('../   ../ ../sounds/bell-start.mp3')
-const bellFinish = require('../sounds/bell-finish.mp3')
 
 export type PomodoroUXPropTypes = { data: Pomodoro }
 
@@ -40,8 +35,8 @@ export function PomodoroUX({ data }: PomodoroUXPropTypes): JSX.Element {
     if (data.isWorking) document.body.classList.add('working')
     if (data.isResting) document.body.classList.add('resting')
 
-    if (data.isWorking) new Audio(bellStart)
-    if (data.isResting) new Audio(bellFinish)
+    // if (data.isWorking) audioWork.play()
+    // if (data.isResting) audioRest.play()
     console.log(`Status: ${data.status}`)
   }, [data.status, data.isWorking, data.isResting])
 

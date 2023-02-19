@@ -146,11 +146,12 @@ export class Pomodoro {
 
   startWork(): void {
     this.control.startWork(this.settings.secondsToWork())
-    this.audio.start
+    this.audio.startWork()
   }
 
   startRest(): void {
     this.control.startRest(this.settings.secondsToShortRest())
+    this.audio.startRest()
   }
 
   startCycle(): void {
