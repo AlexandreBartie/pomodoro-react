@@ -1,13 +1,13 @@
 * {
   margin: 0;
   padding: 0;
-  outline: none;
+  outline: 20;
   box-sizing: border-box;
 }
 
 body {
   font-family: sans-serif;
-  background: #41e1ba;
+  background: #c5cf12;
   transition: background-color 300ms ease-in-out;
   line-height: 1.5
 }
@@ -18,15 +18,11 @@ body {
 }
 
 .working {
-  background: #EF5D50;
+  background: #41e1ba;;
 }
 
 .resting {
-  background: #3F2D50;
-}
-
-.waiting {
-  background: #0F5D50;
+  background: #f5a105;
 }
 
 .hidden {

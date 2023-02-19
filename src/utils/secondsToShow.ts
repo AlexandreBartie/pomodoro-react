@@ -13,11 +13,11 @@ function secondsToShow(seconds: number, full: boolean): string {
   const min = zeroLeft((seconds / 60) % 60)
   const sec = zeroLeft((seconds % 60) % 60)
 
-  let time = `${min}m${sec}s`
+  let time = `${min}:${sec}`
 
   if (full) {
     const hours = zeroLeft(seconds / 3600)
-    time = `${hours}h${time}`
+    time = `${hours}:${time}`
   }
 
   return `${time}`

@@ -1,15 +1,5 @@
-enum ePomodoroStatus {
-  waiting = 'Waiting',
-  working = 'Working',
-  resting = 'Resting',
-}
-
-export interface IPomodoroSettings {
-  pomodoroTime: number
-  shortRestTime: number
-  longRestTime: number
-  cycles: number
-}
+import { PomodoroAudio } from './pomodoroAudio'
+import { IPomodoroSettings, ePomodoroStatus } from './pomodoroContract'
 
 class PomodoroSettings implements IPomodoroSettings {
   readonly pomodoroTime: number
@@ -24,7 +14,19 @@ class PomodoroSettings implements IPomodoroSettings {
     this.cycles = args.cycles
   }
 
-  timeToRest(long: boolean): number {
+  secondsToWork(): number {
+    return this.pomodoroTime * 60
+  }
+
+  secondsToShortRest(): number {
+    return this.secondsToRest(false) * 60
+  }
+
+  secondsToLongRest(): number {
+    return this.secondsToRest(true) * 60
+  }
+
+  private secondsToRest(long: boolean): number {
     if (long) return this.longRestTime
     return this.shortRestTime
   }
@@ -35,7 +37,16 @@ export class PomodoroControl {
 
   public status = ePomodoroStatus.waiting
 
-  public time = 0
+  public currentPomodoro = 0
+  public currentCycle = 0
+
+  public currentTime = 0
+  public workingTime = 0
+  public restingTime = 0
+
+  get isEndTime(): boolean {
+    return this.currentTime === 0
+  }
 
   constructor(pomodoro: Pomodoro) {
     this.pomodoro = pomodoro
@@ -43,33 +54,72 @@ export class PomodoroControl {
 
   startWork(time: number): void {
     this.status = ePomodoroStatus.working
-    this.time = time
+    this.currentTime = time
   }
 
   startRest(time: number): void {
     this.status = ePomodoroStatus.resting
-    this.time = time
+    this.currentTime = time
+  }
+
+  startCycle(time: number): void {
+    this.status = ePomodoroStatus.resting
+    this.currentCycle = this.currentCycle + 1
+    this.currentTime = time
   }
 
   tick(): number {
-    this.time = this.time - 1
-    return this.time
+    if (this.pomodoro.isWorking) {
+      this.workingTime = this.workingTime + 1
+    }
+
+    if (this.pomodoro.isResting) {
+      this.restingTime = this.restingTime + 1
+    }
+
+    this.currentTime = this.currentTime - 1
+
+    this.checkTime()
+
+    return this.currentTime
+  }
+
+  private checkTime() {
+    if (this.isEndTime) {
+      if (this.pomodoro.isWorking) {
+        this.pomodoro.startCycle()
+      }
+
+      if (this.pomodoro.isResting) {
+        this.pomodoro.startWork()
+      }
+    }
   }
 }
 
 export class Pomodoro {
+  protected audio: PomodoroAudio
   protected control: PomodoroControl
-
   protected settings: PomodoroSettings
 
-  private cycles = 0
-
   get timeCountDown(): number {
-    return this.control.time
+    return this.control.currentTime
   }
 
-  get cyclesCount(): number {
-    return this.cycles
+  get timeWorking(): number {
+    return this.control.workingTime
+  }
+
+  get timeResting(): number {
+    return this.control.restingTime
+  }
+
+  get cycleCounting(): number {
+    return this.control.currentCycle
+  }
+
+  get pomoCounting(): number {
+    return this.control.currentPomodoro
   }
 
   get status(): ePomodoroStatus {
@@ -84,28 +134,30 @@ export class Pomodoro {
     return this.status === ePomodoroStatus.working
   }
 
+  get isResting(): boolean {
+    return this.status === ePomodoroStatus.resting
+  }
+
   constructor(settings: IPomodoroSettings) {
+    this.audio = new PomodoroAudio()
     this.control = new PomodoroControl(this)
     this.settings = new PomodoroSettings(settings)
   }
 
   startWork(): void {
-    this.control.startWork(this.timeToWork())
+    this.control.startWork(this.settings.secondsToWork())
+    this.audio.start
   }
 
-  startRest(long: boolean): void {
-    this.control.startRest(this.timeToRest(long))
+  startRest(): void {
+    this.control.startRest(this.settings.secondsToShortRest())
+  }
+
+  startCycle(): void {
+    this.control.startCycle(this.settings.secondsToLongRest())
   }
 
   tick(): number {
     return this.control.tick()
-  }
-
-  private timeToWork(): number {
-    return this.settings.pomodoroTime * 60
-  }
-
-  private timeToRest(long: boolean): number {
-    return this.settings.timeToRest(long) * 60
   }
 }
