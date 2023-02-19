@@ -1,5 +1,19 @@
 import { IPomodoroSettings } from './pomodoroContract'
 
+export const settingsTest: IPomodoroSettings = {
+  pomodoroTime: 0.3, // 18 seconds
+  shortRestTime: 0.1, // 6 seconds
+  longRestTime: 0.2, // 12 seconds
+  cycles: 3, // 3 cycles to get 1 pomodoro
+}
+
+export const settingsDefault: IPomodoroSettings = {
+  pomodoroTime: 25, // 25 minutes
+  shortRestTime: 5, // 05 minutes
+  longRestTime: 15, // 15 minutes
+  cycles: 4, // 4 cycles to get 1 pomodoro
+}
+
 export class PomodoroSettings implements IPomodoroSettings {
   readonly pomodoroTime: number
   readonly shortRestTime: number

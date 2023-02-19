@@ -9,7 +9,7 @@ export type PomodoroUXPropTypes = { data: Pomodoro }
 
 export function PomodoroUX({ data }: PomodoroUXPropTypes): JSX.Element {
   const [time, setTime] = useState(data.timeCountDown)
-  const [, setStatus] = useState(data.status)
+  const [status, setStatus] = useState(data.status)
 
   function onStartWork() {
     data.startWork()
@@ -35,12 +35,12 @@ export function PomodoroUX({ data }: PomodoroUXPropTypes): JSX.Element {
     if (data.isWorking) document.body.classList.add('working')
     if (data.isResting) document.body.classList.add('resting')
 
-    console.log(`Status: ${data.status}`)
-  }, [data.status, data.isWorking, data.isResting])
+    console.log(`Status: ${data.status} Time: ${data.timeCountDown}`)
+  }, [data.status, data.timeCountDown, data.isWorking, data.isResting])
 
   return (
     <div className="pomodoro">
-      <h2>You are {data.status}</h2>
+      <h2>You are {status}</h2>
       <Timer seconds={time} />
       <div className="controls">
         <Button
