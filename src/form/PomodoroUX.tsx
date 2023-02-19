@@ -35,8 +35,6 @@ export function PomodoroUX({ data }: PomodoroUXPropTypes): JSX.Element {
     if (data.isWorking) document.body.classList.add('working')
     if (data.isResting) document.body.classList.add('resting')
 
-    // if (data.isWorking) audioWork.play()
-    // if (data.isResting) audioRest.play()
     console.log(`Status: ${data.status}`)
   }, [data.status, data.isWorking, data.isResting])
 
@@ -58,8 +56,8 @@ export function PomodoroUX({ data }: PomodoroUXPropTypes): JSX.Element {
       </div>
 
       <div className="details">
-        <p>Ended Pomodoros: {data.pomoCounting}</p>
-        <p>Ended Cycles: {data.cycleCounting}</p>
+        <p>Pomodoros #: {data.pomoCounting}</p>
+        <p>Cycles#: {data.cycleCounting}</p>
         <p>Working Time: {secondsToHHMMSS(data.timeWorking)}</p>
         <p>Resting Time: {secondsToHHMMSS(data.timeResting)}</p>
       </div>
