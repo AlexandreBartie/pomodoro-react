@@ -53,18 +53,22 @@ export class Pomodoro {
 
   startWork(): void {
     this.control.startWork(this.settings.secondsToWork())
+    console.log('startWork ...')
   }
 
   startRest(): void {
     this.control.startRest(this.settings.secondsToShortRest())
+    console.log('startRest ...')
   }
 
   startCycle(): void {
-    this.control.startRest(this.settings.secondsToShortRest())
+    this.control.startCycle(this.settings.secondsToShortRest())
+    console.log('startCycle ...')
   }
 
   startPomodoro(): void {
-    this.control.startRest(this.settings.secondsToLongRest())
+    this.control.startPomodoro(this.settings.secondsToLongRest())
+    console.log('startPomodoro ...')
   }
 
   tick(): number {

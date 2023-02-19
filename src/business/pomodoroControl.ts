@@ -45,6 +45,8 @@ export class PomodoroControl {
     this.status = ePomodoroStatus.resting
     this.currentCycle = this.currentCycle + 1
     this.currentTime = time
+    this.audio.startRest()
+    this.audio.startRest()
   }
 
   startPomodoro(time: number): void {
@@ -52,6 +54,9 @@ export class PomodoroControl {
     this.currentPomodoro = this.currentPomodoro + 1
     this.currentCycle = 0
     this.currentTime = time
+    this.audio.startRest()
+    this.audio.startRest()
+    this.audio.startRest()
   }
 
   tick(): number {
@@ -75,9 +80,7 @@ export class PomodoroControl {
       if (this.pomodoro.isWorking) {
         if (this.isEndCycle) this.pomodoro.startPomodoro()
         else this.pomodoro.startCycle()
-      }
-
-      if (this.pomodoro.isResting) {
+      } else if (this.pomodoro.isResting) {
         this.pomodoro.startWork()
       }
     }
