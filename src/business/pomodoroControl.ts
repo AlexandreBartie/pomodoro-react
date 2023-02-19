@@ -1,8 +1,11 @@
 import { Pomodoro } from './pomodoro'
+import { PomodoroAudio } from './pomodoroAudio'
 import { ePomodoroStatus } from './pomodoroContract'
 
 export class PomodoroControl {
   private pomodoro: Pomodoro
+
+  private audio: PomodoroAudio
 
   public status = ePomodoroStatus.waiting
 
@@ -17,23 +20,37 @@ export class PomodoroControl {
     return this.currentTime === 0
   }
 
+  get isEndCycle(): boolean {
+    return this.pomodoro.isEndCycle
+  }
+
   constructor(pomodoro: Pomodoro) {
     this.pomodoro = pomodoro
+    this.audio = new PomodoroAudio()
   }
 
   startWork(time: number): void {
     this.status = ePomodoroStatus.working
     this.currentTime = time
+    this.audio.startWork()
   }
 
   startRest(time: number): void {
     this.status = ePomodoroStatus.resting
     this.currentTime = time
+    this.audio.startRest()
   }
 
   startCycle(time: number): void {
     this.status = ePomodoroStatus.resting
     this.currentCycle = this.currentCycle + 1
+    this.currentTime = time
+  }
+
+  startPomodoro(time: number): void {
+    this.status = ePomodoroStatus.resting
+    this.currentPomodoro = this.currentPomodoro + 1
+    this.currentCycle = 0
     this.currentTime = time
   }
 
@@ -56,7 +73,8 @@ export class PomodoroControl {
   private checkTime() {
     if (this.isEndTime) {
       if (this.pomodoro.isWorking) {
-        this.pomodoro.startCycle()
+        if (this.isEndCycle) this.pomodoro.startPomodoro()
+        else this.pomodoro.startCycle()
       }
 
       if (this.pomodoro.isResting) {
