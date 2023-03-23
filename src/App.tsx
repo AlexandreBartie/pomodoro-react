@@ -1,8 +1,8 @@
 import React from 'react'
-import { Pomodoro } from './business/pomodoro'
-import { PomodoroUX } from './form/pomodoroUX'
 
 import { settingsDefault } from './business/pomodoroSettings'
+import { PomodoroUX } from './form/pomodoroUX'
+import { Pomodoro } from './business/pomodoro'
 
 function App(): JSX.Element {
   return (
